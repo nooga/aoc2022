@@ -1,10 +1,10 @@
 (ns day3)
 
 (defn dupe [coll]
-  (first (apply intersection (map (partial apply set) (split-at (/ (count coll) 2) coll)))))
-
+  (first (apply intersection (map set (split-at (/ (count coll) 2) coll)))))
+  
 (defn badge [group]
-  (first (reduce intersection (map (comp (partial apply set) seq) group))))
+  (first (reduce intersection (map set group))))
 
 (defn prio [c]
   (let [a (int \a) A (int \A) c (int c)]
