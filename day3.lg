@@ -1,0 +1,16 @@
+(ns day3)
+
+(defn dupe [coll]
+  (first (apply intersection (map (partial apply set) (split-at (/ (count coll) 2) coll)))))
+
+(defn badge [group]
+  (first (reduce intersection (map (comp (partial apply set) seq) group))))
+
+(defn prio [c]
+  (let [a (int \a) A (int \A) c (int c)]
+    (if (neg? (- c a)) (- c A -27) (- c a -1))))
+
+(def data (-> "input/day3.txt" slurp lines))
+
+(println "1:" (reduce + (map (comp prio dupe) data)))
+(println "2:" (reduce + (map (comp prio badge) (partition 3 data))))
