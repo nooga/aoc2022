@@ -5,7 +5,7 @@
 (def stacks (->> data first butlast
                  (map #(str-replace % #"( |\\[)([A-Z ])(\\]| ) ?" "$2"))
                  (apply mapv list)
-                 (mapv #(drop-while (partial = \ ) %))))
+                 (mapv #(drop-while #{\space} %))))
 
 (def instructions (->> data second rest
                        (map #(str-replace % #"\\w+ (\\d+)" "$1"))
