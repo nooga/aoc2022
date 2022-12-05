@@ -1,0 +1,20 @@
+(ns day4)
+
+(defn parse [line]
+  (map #(map parse-long (split % "-")) (split line ",")))
+
+(def data (->> "input/day4.txt" slurp lines (map parse)))
+
+(defn contain? [[a b] [c d]]
+  (or (and (>= c a) (<= d b)) (and (>= a c) (<= b d))))
+
+(defn in? [a b c] (and (>= b a) (<= b c)))
+
+(defn overlap? [[a b] [c d]]
+  (or (in? a c b) (in? a d b) (in? c a d) (in? c b d)))
+
+(defn solve [f]
+  (->> data (map (partial apply f)) (filter identity) count))
+
+(println "1:" (solve contain?))
+(println "2:" (solve overlap?))
