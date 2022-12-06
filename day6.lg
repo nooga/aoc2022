@@ -1,0 +1,9 @@
+(ns day6)
+
+(def data (slurp "input/day6.txt"))
+
+(defn solve [n]
+  (->> data (partition n 1) (map (comp #{n} count set)) (take-while not) count (+ n)))
+
+(println "1:" (solve 4))
+(println "2:" (solve 14))
