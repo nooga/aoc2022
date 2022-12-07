@@ -1,0 +1,21 @@
+(ns day7)
+
+(defn tally [sizes path fsize]
+  (loop [p path s sizes]
+    (if-not (empty? p)  
+      (recur (pop p) (update s (apply str p) #(+ (or %1 0) fsize))) s)))
+
+(def sizes (loop [[c & r] (->> "input/day7.txt" slurp lines (map #(split % " "))) path [] sizes {}]
+           (if (nil? c) 
+             sizes
+             (let [[f s t] c]
+               (cond 
+                 (and (= f "$") (= s "cd") (= t "..")) (recur r (pop path) sizes)
+                 (and (= f "$") (= s "cd")) (recur r (conj path t) sizes)
+                 (not (#{"dir" "$"} f)) (recur r path (tally sizes path (parse-long f)))
+                 :else (recur r path sizes))))))
+
+(def to-free (- 30000000 (- 70000000 (sizes "/"))))
+
+(println "1:" (reduce + (filter (partial >= 100000) (vals sizes))))
+(println "2:" (apply min (filter (partial <= to-free) (vals sizes))))
