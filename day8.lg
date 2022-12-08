@@ -1,0 +1,23 @@
+(ns day8)
+
+(def data (->> "input/day8.txt" slurp lines (mapv #(mapv (comp parse-long str) %)))) 
+
+(defn seen [ts]
+  (loop [[t & r] ts top -1 c []]
+    (if t (recur r (max top t) (conj c (> t top))) c)))
+
+(defn scenic [ts]
+  (loop [[t & r] ts prev () c []]
+    (if t (recur r (cons t prev)
+                 (let [l (count (take-while #(< % t) prev))]
+                   (conj c (if (= l (count prev)) l (inc l)))))
+        c)))
+
+(defn four-way [comb f]
+  (let [sides (fn [ts] (map comb (f ts) (reverse (f (reverse ts)))))] 
+    (map (partial map comb) 
+         (map sides data) 
+         (apply map list (map sides (apply mapv vector data))))))
+
+(println "1:" (reduce + (map #(count (filter true? %)) (four-way or seen))))
+(println "2:" (reduce max (apply concat (four-way * scenic))))
