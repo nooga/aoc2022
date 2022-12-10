@@ -1,0 +1,9 @@
+(ns day10)
+
+(def data (->> "input/day10.txt" slurp lines 
+               (mapcat #(if (= % "noop") [0] [0 (-> % (split " ") second parse-long)]))
+               (reductions + 1)))
+
+(println "1:" (reduce + (map #(* % (nth data (dec %))) (range 20 260 40))))
+(doseq [l (->> data (map-indexed #(if (-> %2 (- (mod %1 40)) abs (<= 1)) "#" ".")) (partition 40))]
+  (println "2:" (apply str l)))
